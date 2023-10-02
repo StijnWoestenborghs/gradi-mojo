@@ -12,4 +12,4 @@ py:
 	. .venv/bin/activate && python main.py
 
 mo:
-	mojo run main.mojo
+	. .venv/bin/activate && mojo run main.mojo

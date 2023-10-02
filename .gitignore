@@ -1,0 +1,10 @@
+.idea
+.venv
+.coverage
+.vscode
+.ipynb_checkpoints
+__pycache__/
+.pytest_cache
+
+examples
+tutorials

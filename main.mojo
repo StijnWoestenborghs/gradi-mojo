@@ -2,7 +2,7 @@ from benchmark import Benchmark
 from math import sin, cos, sqrt
 from runtime.llcl import Runtime
 
-from mojo.gradient_descent import Matrix, gradient_descent
+from mojo.gradient_descent import Matrix, gradient_descent, gradient_descent_vp
 from mojo.plot_gradient import plot_gradient_descent_cache
 
 
@@ -43,7 +43,8 @@ fn benchmark(N: Int, dim: Int):
         @always_inline
         @parameter
         fn test_fn():
-            _ = gradient_descent(X, D)
+            # _ = gradient_descent(X, D, rt, learning_rate=0.00001)
+            _ = gradient_descent_vp(X, D, rt, learning_rate=0.00001)
 
         let secs = Float64(Benchmark().run[test_fn]()) / 1_000_000_000
         # Prevent the matrices from being freed before the benchmark run
@@ -53,14 +54,15 @@ fn benchmark(N: Int, dim: Int):
 
 
 fn main():
-    alias N = 10
+    alias N = 100
     alias dim = 2
 
     var D = Matrix(N, N)
     generate_distance_matrix(D, N)
 
     # var X = Matrix(N, dim)
-    # gradient_descent(X, D)
+    # with Runtime() as rt:
+    #     gradient_descent(X, D, rt)
     # print(X.__str__())
 
     benchmark(N, dim)

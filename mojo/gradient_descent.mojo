@@ -42,18 +42,22 @@ struct Matrix:
     fn store[nelts: Int](self, y: Int, x: Int, val: SIMD[dtype, nelts]):
         return self.data.simd_store[nelts](y * self.cols + x, val)
 
-    fn __str__(inout self) -> StringLiteral:
-        let matrix_str: StringLiteral = ""
+    fn __str__(inout self) -> String:
         """
-        Mojo currently doesn't support a good way to convert to a StringLiteral: v0.3.0
-        just print it out when calling __str__
+        Until mojo has traits, there isn't a clean implementation of __str__ and __repr__ that are usable for a polymorphic implementation of print.
+        https://github.com/modularml/mojo/discussions/325 --> use print(X.__str__()) instead
+        TODO: implement as joint function ones lists are supported
         """
+        var row_str: String
+        var matrix_str: String = "["
+        
         for y in range(self.rows):
-            print_no_newline("[")
-            for x in range(self.cols):
-                print_no_newline(self.load[1](y, x))
-                print_no_newline(", ")
-            print_no_newline("]\n")
+            row_str = "[ " + String(self.__getitem__(y, 0))
+            for x in range(1, self.cols):
+                row_str += ", " + String(self.__getitem__(y, x))
+            row_str += "]\n "
+            matrix_str += row_str
+        matrix_str = matrix_str[:-2] + "]"
 
         return matrix_str
 

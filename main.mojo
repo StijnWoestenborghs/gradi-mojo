@@ -16,7 +16,7 @@ alias PI = 3.141592653589793
 
 
 ### 2D
-fn generate_circle_points(N: Int, r: Int) -> Matrix[dtype]:
+fn generate_circle_points[dtype: DType](N: Int, r: Int) -> Matrix[dtype]:
     var points = Matrix[dtype](N, 2)
     let angle: SIMD[dtype, 1]
     
@@ -28,7 +28,7 @@ fn generate_circle_points(N: Int, r: Int) -> Matrix[dtype]:
     return points
 
 
-fn generate_distance_matrix(points: Matrix[dtype]) -> Matrix[dtype]:
+fn generate_distance_matrix[dtype: DType](points: Matrix[dtype]) -> Matrix[dtype]:
     let distance: SIMD[dtype, 1]
     let N = points.rows
     var D = Matrix[dtype](N, N)
@@ -44,12 +44,12 @@ fn generate_distance_matrix(points: Matrix[dtype]) -> Matrix[dtype]:
 
 
 @always_inline
-fn benchmark(N: Int, dim: Int):
+fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int):
     let points: Matrix[dtype]
     let D: Matrix[dtype]
     let radius: Int = 3
-    points = generate_circle_points(N, radius)
-    D = generate_distance_matrix(points)
+    points = generate_circle_points[dtype](N, radius)
+    D = generate_distance_matrix[dtype](points)
 
     var X = Matrix[dtype](N, dim)
     X.rand()
@@ -59,7 +59,7 @@ fn benchmark(N: Int, dim: Int):
         @always_inline
         @parameter
         fn test_fn():
-            _ = gradient_descent(X, D, rt, learning_rate = 0.0001, num_iterations = 1000)
+            _ = gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.0001, num_iterations = 1000)
             # _ = gradient_descent_vp(X, D, rt, learning_rate=0.00001)
 
         let secs = Float64(Benchmark().run[test_fn]()) / 1_000_000_000
@@ -74,19 +74,19 @@ fn main():
     let D: Matrix[dtype]
     let radius: Int = 3
 
-    points = generate_circle_points(N, radius)
-    D = generate_distance_matrix(points)
+    points = generate_circle_points[dtype](N, radius)
+    D = generate_distance_matrix[dtype](points)
 
     var X = Matrix[dtype](N, dim)
     X.rand()
     with Runtime() as rt:
-        gradient_descent[dtype](X, D, rt, learning_rate = 0.00001, num_iterations = 1000)
+        gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.00001, num_iterations = 1000)
 
-    benchmark(N, dim)
+    benchmark[dtype, nelts](N, dim)
 
 
     # var X = Matrix(N, dim)
-    X.rand()
-    plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.00001, num_iterations = 1000)
+    # X.rand()
+    # plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.00001, num_iterations = 1000)
   
 

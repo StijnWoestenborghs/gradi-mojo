@@ -104,26 +104,3 @@ fn compute_gradient[dtype: DType, nelts: Int](inout grad: Matrix[dtype], X: Matr
 
     parallelize[calc_row](rt, N)
 
-
-
-# fn gradient_descent_vp[dtype: DType](inout X: Matrix[dtype], D: Matrix[dtype], rt: Runtime, learning_rate: type = 0.0001, num_iterations: Int = 1000):
-#     let N = X.rows
-#     let dim = X.cols
-#     var grad = Matrix(N, dim)
-
-#     for _ in range(num_iterations):
-#         # compute_gradient(grad, X, D, rt)
-#         compute_gradient_vp(grad, X, D, rt)
-        
-#         @parameter
-#         fn calc_row(r: Int):
-    
-#             @parameter
-#             fn grad_vector[nelts: Int](c: Int):
-#                 X.store[nelts](
-#                     r, c, X.load[nelts](r, c) - learning_rate * grad.load[nelts](r, c)
-#                 )
-
-#             vectorize[nelts, grad_vector](X.cols)
-
-#         parallelize[calc_row](rt, X.rows)

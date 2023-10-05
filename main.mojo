@@ -3,11 +3,11 @@ from math import sin, cos, sqrt
 from runtime.llcl import Runtime
 
 from mojo.gradi.matrix import Matrix
-from mojo.gradient_descent import gradient_descent #, gradient_descent_vp
+from mojo.gradient_descent import gradient_descent
 from mojo.plot_gradient import plot_gradient_descent_cache
 
 
-alias N = 100
+alias N = 1000
 alias dim = 2
 alias dtype = DType.float32
 alias nelts = simdwidthof[dtype]()
@@ -59,8 +59,7 @@ fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int):
         @always_inline
         @parameter
         fn test_fn():
-            _ = gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.0001, num_iterations = 1000)
-            # _ = gradient_descent_vp(X, D, rt, learning_rate=0.00001)
+            _ = gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.00001, num_iterations = 1000)
 
         let secs = Float64(Benchmark().run[test_fn]()) / 1_000_000_000
         # Prevent the matrices from being freed before the benchmark run
@@ -86,7 +85,7 @@ fn main():
 
 
     # var X = Matrix(N, dim)
-    # X.rand()
-    # plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.00001, num_iterations = 1000)
+    X.rand()
+    plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.00001, num_iterations = 1000)
   
 

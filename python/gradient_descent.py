@@ -27,11 +27,7 @@ def compute_gradient(X, D):
     return grad
 
 
-def gradient_descent(D, learning_rate=0.0001, num_iterations=1000):
-    dim = 2
-    N = D.shape[0]
-    X = np.random.rand(N, dim)
-
+def gradient_descent(X, D, learning_rate=0.0001, num_iterations=1000):
     for i in range(num_iterations):
         grad = compute_gradient(X, D)
         X -= learning_rate * grad

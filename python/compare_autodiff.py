@@ -9,11 +9,23 @@ from autodiff import *
 from timeit import timeit
 import jax
 import jax.numpy as jnp
-
+from casadi import *
 
 if __name__ == "__main__":
     ### TEST AUTODIFF
     val1, val2, val3 = 0.9, 0.4, 1.3
+
+    def grad_casadi():
+        x = SX.sym('x')
+        y = SX.sym('y')
+        c = SX.sym('c')
+        z = (x*y+c)*c + x
+        xyc = vertcat(x,y,c)
+        grad = gradient(z, xyc)
+        gradf = Function('gradf', [x,y,c], [grad])
+        return gradf
+    grad_func_casadi = grad_casadi()
+    grad_val_casadi = grad_func_casadi(val1, val2, val3)
 
     def autodiff_original(val1, val2, val3):
         with Graph() as g:
@@ -52,6 +64,7 @@ if __name__ == "__main__":
     secs_orig = benchmark_function(autodiff_original, val1, val2, val3, name="autodiff_original")
     #secs_jax = benchmark_function(grad_func, val1, val2, val3, name="autodiff_jax")
     secs_jaxjit = benchmark_function(grad_jit, jnp.array(val1), jnp.array(val2), jnp.array(val3), name="autodiff_jax_jit")
+    secs_casadi = benchmark_function(grad_func_casadi, val1, val2, val3, name="casadi")
 
     print(f"Gain of {secs_orig/secs_jaxjit} for autodiff_jax_jit")
     

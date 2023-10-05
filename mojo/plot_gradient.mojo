@@ -1,14 +1,20 @@
 from python.python import Python
 from runtime.llcl import Runtime
 
-from mojo.gradient_descent import Matrix, gradient_descent, compute_gradient, loss, type
+from mojo.gradient_descent import gradient_descent, compute_gradient, loss
+from mojo.gradi.matrix import Matrix
 
 
+fn plot_gradient_descent_cache[dtype: DType](
+        inout X: Matrix[dtype], 
+        D: Matrix[dtype], 
+        learning_rate: SIMD[dtype, 1], 
+        num_iterations: Int
+    ):
 
-fn plot_gradient_descent_cache(inout X: Matrix, D: Matrix, learning_rate: type = 0.0001, num_iterations: Int = 1000):
     let N = X.rows
     let dim = X.cols
-    var grad = Matrix(N, dim)
+    var grad = Matrix[dtype](N, dim)
 
     var positions_over_time: PythonObject = []
     var loss_over_time: PythonObject = []
@@ -17,10 +23,11 @@ fn plot_gradient_descent_cache(inout X: Matrix, D: Matrix, learning_rate: type =
         try:
             for i in range(num_iterations):
                 
-                positions_over_time += flatten(X)                         # ? Can't seem to find another way but to flatten and reshape
-                loss_over_time += [loss(X, D).cast[DType.float64]()]      # ? Mandatory cast to float64
+                positions_over_time += flatten(X)                                   # ? Can't seem to find another way but to flatten and reshape
+                loss_over_time += [loss[dtype](X, D).cast[DType.float64]()]         # ? Mandatory cast to float64
                 
-                compute_gradient(grad, X, D, rt)
+                grad.zeros()
+                compute_gradient[dtype](grad, X, D, rt)
                 for r in range(X.rows):
                     for c in range(X.cols):
                         X[r, c] -= learning_rate * grad[r, c]
@@ -44,7 +51,7 @@ fn plot_gradient_descent_cache(inout X: Matrix, D: Matrix, learning_rate: type =
         print(e.value)
 
 
-fn flatten(X: Matrix) -> PythonObject:
+fn flatten[dtype: DType](X: Matrix[dtype]) -> PythonObject:
     var flat_array: PythonObject = []
     for i in range(X.rows):
         for j in range(X.cols):

@@ -1,5 +1,5 @@
 from algorithm import vectorize, parallelize, vectorize_unroll
-from memory import memset_zero
+from memory import memset_zero, memset
 from random import rand
 from runtime.llcl import Runtime
 
@@ -18,16 +18,25 @@ struct Matrix[dtype: DType]:
     fn __del__(owned self):
         self.data.free()
 
-    fn zero(inout self):
+    fn zeros(inout self):
         memset_zero(self.data, self.rows * self.cols)
 
+    fn ones(inout self):
+        # memset(self.data, 1, self.rows * self.cols)    # v0.3.0: memset only takes in SIMD[ui8, 1] for now
+        for y in range(self.rows):
+            for x in range(self.cols):
+                self[y, x] = 1
+        
+    fn rand(inout self):
+        rand(self.data, self.rows*self.cols)
+
     @always_inline
-    fn __getitem__(inout self, y: Int, x: Int) -> SIMD[dtype, 1]:
+    fn __getitem__(self, y: Int, x: Int) -> SIMD[dtype, 1]:
         return self.load[1](y, x)
 
     @always_inline
     fn __setitem__(inout self, y: Int, x: Int, val: SIMD[dtype, 1]):
-        return self.store[1](y, x, val)
+        self.store[1](y, x, val)
 
     @always_inline
     fn __copyinit__(inout self, other: Matrix[dtype]):
@@ -39,7 +48,7 @@ struct Matrix[dtype: DType]:
         self.cols = other.cols
 
     @always_inline
-    fn load[nelts: Int](inout self, y: Int, x: Int) -> SIMD[dtype, nelts]:
+    fn load[nelts: Int](self, y: Int, x: Int) -> SIMD[dtype, nelts]:
         return self.data.simd_load[nelts](y * self.cols + x)
 
     @always_inline
@@ -47,7 +56,7 @@ struct Matrix[dtype: DType]:
         return self.data.simd_store[nelts](y * self.cols + x, val)
 
     @always_inline
-    fn __str__(inout self) -> String:
+    fn __str__(self) -> String:
         """
         Until mojo has traits, there isn't a clean implementation of __str__ and __repr__ that are usable for a polymorphic implementation of print.
         https://github.com/modularml/mojo/discussions/325 --> use print(X.__str__()) instead
@@ -65,7 +74,7 @@ struct Matrix[dtype: DType]:
 
         return matrix_str
 
-    fn T(inout self) -> Matrix[dtype]:
+    fn T(self) -> Matrix[dtype]:
         var transposed = Matrix[dtype](self.cols, self.rows)
         for y in range(self.cols):
             for x in range(self.rows):
@@ -75,7 +84,7 @@ struct Matrix[dtype: DType]:
     
     fn dot[nelts: Int](inout self, other: Matrix[dtype], rt: Runtime) -> Matrix[dtype]:
         var C = Matrix[dtype](self.rows, other.cols)
-        C.zero()
+        C.zeros()
 
         @parameter
         fn calc_row(m: Int):
@@ -84,7 +93,7 @@ struct Matrix[dtype: DType]:
                 @parameter
                 fn dot[nelts: Int](n: Int):
                     C.store[nelts](
-                        m, n, C.load[nelts](m, n) + self[m, k] * other.data.simd_load[nelts](k * other.cols + n)
+                        m, n, C.load[nelts](m, n) + self[m, k] * other.load[nelts](k, n)
                     )
 
                 vectorize[nelts, dot](C.cols)
@@ -92,3 +101,35 @@ struct Matrix[dtype: DType]:
         parallelize[calc_row](rt, C.rows)
         
         return C
+
+    @always_inline
+    fn __mul__(self, scalar: SIMD[dtype, 1]) -> Matrix[dtype]:
+        var res = Matrix[dtype](self.rows, self.cols)
+        for y in range(self.rows):
+            for x in range(self.cols):
+                res[y, x] = scalar * self.data.simd_load[1](y * self.cols + x)
+        return res
+
+    @always_inline
+    fn __rmul__(self, scalar: SIMD[dtype, 1]) -> Matrix[dtype]:
+        return self.__mul__(scalar)
+
+    @always_inline
+    fn __add__(self, other: Matrix[dtype]) -> Matrix[dtype]:
+        var res = Matrix[dtype](self.rows, self.cols)
+        for y in range(self.rows):
+            for x in range(self.cols):
+                res[y, x] = self.data.simd_load[1](y * self.cols + x) + other.data.simd_load[1](y * self.cols + x)
+        return res
+
+    @always_inline
+    fn __iadd__(inout self, owned other: Matrix[dtype]):
+        for y in range(self.rows):
+            for x in range(self.cols):
+                self[y, x] +=  other[y, x]
+
+    @always_inline
+    fn __isub__(inout self, owned other: Matrix[dtype]):
+        for y in range(self.rows):
+            for x in range(self.cols):
+                self[y, x] -=  other[y, x]

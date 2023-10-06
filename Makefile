@@ -13,3 +13,21 @@ py:
 
 mo:
 	. .venv/bin/activate && mojo run main.mojo
+
+cpp-build:
+	@echo "Building C++ executable ..."
+	g++ -std=c++20 \
+		-o ./cpp/build/bin/gradient_descent \
+		-I ./cpp/include \
+		./cpp/src/*.cpp
+
+	@echo "Building C++ shared object ..."
+	g++ -std=c++20 \
+		-o ./cpp/build/lib/gradient_descent.so \
+		-fpic \
+		-shared \
+		-I ./cpp/include \
+		./cpp/src/*.cpp
+
+	@echo "Running C++ executable"
+	./cpp/build/bin/gradient_descent

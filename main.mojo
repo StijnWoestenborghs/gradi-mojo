@@ -56,7 +56,7 @@ fn generate_distance_matrix[dtype: DType](points: Matrix[dtype]) -> Matrix[dtype
 
 
 @always_inline
-fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int):
+fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int, lr: SIMD[dtype, 1], niter: Int):
     let points: Matrix[dtype]
     let D: Matrix[dtype]
     
@@ -68,7 +68,7 @@ fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int):
 
     @parameter
     fn test_fn():
-        _ = gradient_descent[dtype, nelts](X, D, learning_rate = 0.00001, num_iterations = 1000)
+        _ = gradient_descent[dtype, nelts](X, D, learning_rate = lr, num_iterations = niter)
 
     let secs = Benchmark().run[test_fn]() / 1e9
     # Prevent the matrices from being freed before the benchmark run
@@ -99,10 +99,10 @@ fn main():
     X.rand()
 
     ### Without visuals
-    gradient_descent[dtype, nelts](X, D, learning_rate = 0.0001, num_iterations = 1000)
+    gradient_descent[dtype, nelts](X, D, learning_rate=lr, num_iterations=niter)
 
     ### Benchmark
-    benchmark[dtype, nelts](N, dim)
+    benchmark[dtype, nelts](N, dim, lr=lr, niter=niter)
 
     ### PLOTTING
     # var X = Matrix(N, dim)

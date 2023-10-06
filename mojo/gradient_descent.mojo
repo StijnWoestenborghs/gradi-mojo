@@ -20,7 +20,7 @@ fn loss[dtype: DType](X: Matrix[dtype], D: Matrix[dtype]) -> SIMD[dtype, 1]:
 
 
 fn compute_gradient[dtype: DType](inout grad: Matrix[dtype], X: Matrix[dtype], D: Matrix[dtype]):
-    var squared_distance: SIMD[dtype, 1] = 0
+    var squared_distance: SIMD[dtype, 1]
     
     for i in range(X.rows):
         for j in range(X.rows):

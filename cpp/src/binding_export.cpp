@@ -70,6 +70,7 @@ int run_binding_external(char* c, int length, char** c_return, int* length_retur
     return 0;
 }
 
+// Avoid memory leak
 void delete_c_return(char* c_return) {
     delete c_return;
 }

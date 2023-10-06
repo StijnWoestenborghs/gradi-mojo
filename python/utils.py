@@ -44,7 +44,9 @@ def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient
     points = np.array(positions_over_time)
     if points.ndim == 2:
         points = points[np.newaxis, :, :]
-    
+    if not isinstance(loss_over_time, (list, np.ndarray)):
+        loss_over_time = [loss_over_time]
+
     N_points = len(points[0])
     time_steps = len(points)
 

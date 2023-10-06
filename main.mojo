@@ -81,8 +81,8 @@ fn main():
     #### TODO: implement with tensor ? 
     # let t = Tensor[DType.float64](10, 2)
 
-    alias N = 100
-    alias dim = 3
+    alias N = 10
+    alias dim = 2
     alias lr = 0.00001
     alias niter = 1000
     alias dtype = DType.float32

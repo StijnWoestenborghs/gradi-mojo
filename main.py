@@ -8,21 +8,18 @@ from python.utils import plot_gradient_descent, plot_gradient_descent_2D, animat
 from timeit import timeit
 
 
-def benchmark_gradient_descent(X, D):
-    secs = timeit(lambda: gradient_descent(X, D, learning_rate=0.00001, num_iterations=1000), number=2) / 2
+def benchmark_gradient_descent(X, D, lr, niter):
+    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=2) / 2
     print(f"Average time python numpy: {secs}")
 
 
-def benchmark_gradient_descent_JAX(X, D):
-    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=0.00001, num_iterations=1000), number=2) / 2
+def benchmark_gradient_descent_JAX(X, D, lr, niter):
+    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=2) / 2
     print(f"Average time JAX: {secs}")
     
 
-def benchmark_gradient_descent_native(X, D):
-    N = D.shape[0]
-    D_native = PyMatrix(D.tolist(), N, N)
-    X_native = PyMatrix(X.tolist(), N, 2)
-    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=0.00001, num_iterations=1000), number=2) / 2
+def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
+    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=2) / 2
     print(f"Average time python native: {secs}")
 
 
@@ -61,36 +58,40 @@ def generate_distance_matrix(points):
 
 
 if __name__ == "__main__":
-    N = 10
-    dim = 2
+    N = 100
+    dim = 3
+    lr = 0.00001
+    niter = 1000
 
+    # Create optimization target
     circle = generate_radial_points(N, dim)
     D = np.array(generate_distance_matrix(circle), dtype=np.float64)
     D_native = PyMatrix(D.tolist(), N, N)
 
+    # Initial starting point
     np.random.seed(42)
-    
-    X = np.random.rand(N, dim)  # use same starting values X for np and jax
-    X_native = PyMatrix(X.tolist(), N, 2)
+    X = np.random.rand(N, dim)
+    X_native = PyMatrix(X.tolist(), N, dim)
 
     ### Without visuals
-    p = gradient_descent_JAX(X, D)
-    p2 = gradient_descent(X, D)
-    p3 = gradient_descent_native(X_native, D_native)
+    p1 = gradient_descent_native(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
+    p2 = gradient_descent(X.copy(), D, learning_rate=lr, num_iterations=niter)
+    p3 = gradient_descent_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
 
     ### Benchmarks
-    benchmark_gradient_descent(X, D)
-    benchmark_gradient_descent_native(X, D)  
-    benchmark_gradient_descent_JAX(X, D)
+    benchmark_gradient_descent_native(X_native.copy(), D_native, lr=lr, niter=niter)
+    benchmark_gradient_descent(X.copy(), D, lr=lr, niter=niter)
+    benchmark_gradient_descent_JAX(X.copy(), D, lr=lr, niter=niter)
 
     ### PLOTTING
-    P, L = gradient_descent_cache(D, learning_rate=0.0001, num_iterations=1000)
+    P, L = gradient_descent_cache(X.copy(), D, learning_rate=lr, num_iterations=niter)
+    plot_gradient_descent_2D(P, L, title="Gradient Descent in python numpy")
     plot_gradient_descent(P, L, title="Gradient Descent in python numpy")
     
-    P_native, L_native = gradient_descent_native_cache(D_native, learning_rate=0.0001, num_iterations=1000)
+    P_native, L_native = gradient_descent_native_cache(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
     plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
 
-    P_JAX, L_JAX = gradient_descent_cache_JAX(D, learning_rate=0.0001, num_iterations=1000)
+    P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
     plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
     
-    # animate_gradient_descent(P[:100], L[:100])
+    # # animate_gradient_descent(P[:100], L[:100])

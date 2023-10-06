@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 
 def plot_gradient_descent_2D(positions_over_time, loss_over_time, title = 'Gradient descent'):
-    print(f"Plotting: {title}")
+    print(f"Plotting: {title}...")
     positions_over_time = np.array(positions_over_time)
     X_final = positions_over_time[-1]
     loss_final = loss_over_time[-1]
@@ -40,6 +40,7 @@ def flatten(points):
 
 
 def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient descent'):
+    print(f"Plotting: {title}...")
     points = np.array(positions_over_time)
     if points.ndim == 2:
         points = points[np.newaxis, :, :]
@@ -80,7 +81,8 @@ def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient
     fig.show()
 
 
-def animate_gradient_descent(positions_over_time, loss_over_time):
+def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradient Descent Animation"):
+    print(f"Animating: {title}...")
     points = np.array(positions_over_time)
     if points.ndim == 2:
         points = points[np.newaxis, :, :]
@@ -99,7 +101,7 @@ def animate_gradient_descent(positions_over_time, loss_over_time):
             marker=dict(color=["red"] * N_points, size=10)
         )],
         layout=go.Layout(
-            title="Gradient Descent Animation",
+            title=title,
             updatemenus=[dict(
                 type='buttons',
                 showactive=False,

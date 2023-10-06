@@ -105,10 +105,7 @@ def gradient_descent_native(X, D, learning_rate=0.0001, num_iterations=1000):
     return X
 
 
-def gradient_descent_native_cache(D, learning_rate=0.0001, num_iterations=1000):
-    dim = 2
-    N = D.rows
-    X = PyMatrix([[random.random() for _ in range(dim)] for _ in range(N)], N, dim)
+def gradient_descent_native_cache(X, D, learning_rate=0.0001, num_iterations=1000):
 
     positions_over_time = []
     loss_over_time = []

@@ -35,10 +35,7 @@ def gradient_descent(X, D, learning_rate=0.0001, num_iterations=1000):
     return X
 
 
-def gradient_descent_cache(D, learning_rate=0.001, num_iterations=1000):
-    dim = 2
-    N = D.shape[0]
-    X = np.random.rand(N, dim)
+def gradient_descent_cache(X, D, learning_rate=0.001, num_iterations=1000):
 
     positions_over_time = []
     loss_over_time = []

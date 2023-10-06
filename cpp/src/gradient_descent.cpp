@@ -1,5 +1,7 @@
+#include <iostream>
 #include <vector>
 #include <Eigen/Dense>
+#include <omp.h>
 
 #include "gradient_descent.h"
 
@@ -11,6 +13,10 @@ void compute_gradient(
     ) {
     float squared_distance;
 
+    // int num_threads = omp_get_max_threads();
+    // std::cout << num_threads << std::endl;     // 20 for my machine
+    // omp_set_num_threads(X.rows());
+    // #pragma omp parallel for private(squared_distance)
     for (int i = 0; i < X.rows(); ++i) {
         for (int j = 0; j < X.rows(); ++j) {
             squared_distance = 0;

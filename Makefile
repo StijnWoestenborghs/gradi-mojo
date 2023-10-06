@@ -18,6 +18,7 @@ cpp-build:
 	@echo "Building C++ executable ..."
 	g++ -std=c++20 \
 		-O3 \
+		-fopenmp \
 		-o ./cpp/build/bin/gradient_descent \
 		-I ./cpp/include \
 		-I ./cpp/include/eigen-3.4.0 \
@@ -28,6 +29,7 @@ cpp-build:
 		-O3 \
 		-fpic \
 		-shared \
+		-fopenmp \
 		-o ./cpp/build/lib/gradient_descent.so \
 		-I ./cpp/include \
 		-I ./cpp/include/eigen-3.4.0 \

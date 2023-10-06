@@ -4,6 +4,7 @@ from matplotlib.animation import FuncAnimation
 
 
 def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient descent'):
+    print(f"Plotting: {title}")
     positions_over_time = np.array(positions_over_time)
     X_final = positions_over_time[-1]
     loss_final = loss_over_time[-1]

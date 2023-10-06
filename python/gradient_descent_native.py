@@ -95,12 +95,8 @@ def compute_gradient_native(X, D):
     return grad
 
 
-def gradient_descent_native(D, learning_rate=0.0001, num_iterations=1000):
-    dim = 2
-    N = D.rows
-    X = PyMatrix([[random.random() for _ in range(dim)] for _ in range(N)], N, dim)
-
-    for i in range(num_iterations):
+def gradient_descent_native(X, D, learning_rate=0.0001, num_iterations=1000):
+    for _ in range(num_iterations):
         grad = compute_gradient_native(X, D)
         for r in range(X.rows):
             for c in range(X.cols):
@@ -117,7 +113,7 @@ def gradient_descent_native_cache(D, learning_rate=0.0001, num_iterations=1000):
     positions_over_time = []
     loss_over_time = []
 
-    for i in range(num_iterations):
+    for _ in range(num_iterations):
         positions_over_time.append(X.copy().value)
         loss_over_time.append(loss_native(X, D))
 

@@ -1,6 +1,6 @@
 import jax.numpy as jnp
-import numpy as snp
 import jax
+
 
 def loss(X, D):
     N = X.shape[0]
@@ -20,12 +20,14 @@ def compute_gradient(X, D):
     (X, D), grad = jax.lax.scan(iter1, (X, D), iterations)
     return grad
 
+
 def iter1(carry, row1):
     X, D = carry
     iterations = jnp.arange(X.shape[0])
     (X, D, row1), grad = jax.lax.scan(calc_single_grad, (X, D, row1), iterations)
     grad = jnp.sum(grad, axis=0)    
     return (X, D), grad
+
 
 def calc_single_grad(carry, row2):
     X, D, row1 = carry
@@ -38,6 +40,7 @@ def calc_single_grad(carry, row2):
     #grad = 4 * (squared_distance - D[row1, row2]**2) * difference
     return (X, D, row1), grad
 
+
 def gradient_descent_JAX(X, D, learning_rate=0.0001, num_iterations=1000):
     D = jnp.array(D)
     X = jnp.array(X)
@@ -45,6 +48,7 @@ def gradient_descent_JAX(X, D, learning_rate=0.0001, num_iterations=1000):
     iterations = jnp.arange(num_iterations)
     (X, learning_rate, D), _ = jax.lax.scan(grad_step, (X, learning_rate, D), iterations)
     return X
+
 
 def grad_step(carry, x):
     X, learning_rate, D = carry
@@ -64,11 +68,11 @@ def gradient_descent_cache_JAX(D, learning_rate=0.001, num_iterations=1000):
     iterations = jnp.arange(num_iterations)
     (X, learning_rate, D), (positions_over_time, loss_over_time) = jax.lax.scan(grad_step_with_time_evolution, (X, learning_rate, D), iterations)
 
-
     #positions_over_time.append(X.copy())
     #loss_over_time.append(loss(X, D))
 
     return positions_over_time, loss_over_time
+
 
 def grad_step_with_time_evolution(carry, x):
     X, learning_rate, D = carry

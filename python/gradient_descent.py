@@ -28,7 +28,7 @@ def compute_gradient(X, D):
 
 
 def gradient_descent(X, D, learning_rate=0.0001, num_iterations=1000):
-    for i in range(num_iterations):
+    for _ in range(num_iterations):
         grad = compute_gradient(X, D)
         X -= learning_rate * grad
 
@@ -43,7 +43,7 @@ def gradient_descent_cache(D, learning_rate=0.001, num_iterations=1000):
     positions_over_time = []
     loss_over_time = []
 
-    for i in range(num_iterations):
+    for _ in range(num_iterations):
         positions_over_time.append(X.copy())
         loss_over_time.append(loss(X, D))
 

@@ -7,7 +7,7 @@ from mojo.gradient_descent import gradient_descent
 from mojo.plot_gradient import plot_gradient_descent_cache
 
 
-alias N = 1000
+alias N = 10
 alias dim = 2
 alias dtype = DType.float32
 alias nelts = simdwidthof[dtype]()

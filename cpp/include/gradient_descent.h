@@ -1,13 +1,16 @@
 // Input type definitions
 struct InputBindingInterface {
-    int value;
-    int n;
+    int N;
+    int dim;
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> X;
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> D;
+    float learning_rate;
+    int num_iterations;
 };
 
 // Output type definitions
 struct OutputBindingInterface {
-    int value_out;
-    bool done;
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> X;
 };
 
 // Bounded function

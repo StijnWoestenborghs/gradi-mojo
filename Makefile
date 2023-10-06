@@ -20,6 +20,7 @@ cpp-build:
 		-O3 \
 		-o ./cpp/build/bin/gradient_descent \
 		-I ./cpp/include \
+		-I ./cpp/include/eigen-3.4.0 \
 		./cpp/src/*.cpp
 
 	@echo "Building C++ shared object ..."
@@ -29,6 +30,7 @@ cpp-build:
 		-shared \
 		-o ./cpp/build/lib/gradient_descent.so \
 		-I ./cpp/include \
+		-I ./cpp/include/eigen-3.4.0 \
 		./cpp/src/*.cpp
 
 	@echo "Running C++ executable"

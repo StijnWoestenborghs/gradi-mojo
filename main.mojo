@@ -24,9 +24,9 @@ fn generate_radial_points[dtype: DType](N: Int, dim: Int) -> Matrix[dtype]:
         let phi: SIMD[dtype, 1]
         let theta: SIMD[dtype, 1]
         for i in range(N):
-            angle = (1 - 2 * (i/ N)).cast[dtype]()
+            angle = (1 - 2 * (i / N)).cast[dtype]()
             phi = acos[dtype, 1](angle)
-            theta = sqrt[dtype, 1](N * PI) / phi
+            theta = sqrt[dtype, 1](N * PI) * phi    
             points[i, 0] = r * sin(phi) * cos(theta)
             points[i, 1] = r * sin(phi) * sin(theta)
             points[i, 2] = r * cos(phi)
@@ -36,15 +36,19 @@ fn generate_radial_points[dtype: DType](N: Int, dim: Int) -> Matrix[dtype]:
     return points
 
 
-fn generate_distance_matrix[dtype: DType](points: Matrix[dtype]) -> Matrix[dtype]:
-    let distance: SIMD[dtype, 1]
+fn generate_distance_matrix[dtype: DType](points: Matrix[dtype]) -> Matrix[dtype]:  
     let N = points.rows
+    let dim = points.cols
+    var distance: SIMD[dtype, 1]
     var D = Matrix[dtype](N, N)
     D.zeros()    
-    
+
     for i in range(N):
         for j in range(i+1, N):
-            distance = sqrt((points[j, 0] - points[i, 0])**2 + (points[j, 1] - points[i, 1])**2)
+            distance = 0
+            for d in range(dim):
+                distance += (points[j, d] - points[i, d])**2
+            distance = sqrt(distance)
             D[i, j] = distance
             D[j, i] = distance
     
@@ -100,10 +104,14 @@ fn main():
     ### Benchmark
     benchmark[dtype, nelts](N, dim)
 
-
     ### PLOTTING
     # var X = Matrix(N, dim)
-    X.rand()
-    plot_gradient_descent_cache[dtype](X, D, learning_rate=lr, num_iterations=niter)
+    
+    try:
+        X.rand()
+        _ = plot_gradient_descent_cache[dtype](X, D, learning_rate=lr, num_iterations=niter)
+    except e:
+        print("Error: ", e)
+
   
 

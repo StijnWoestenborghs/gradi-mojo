@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+import plotly.graph_objects as go
 
 
-def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient descent'):
+def plot_gradient_descent_2D(positions_over_time, loss_over_time, title = 'Gradient descent'):
     print(f"Plotting: {title}")
     positions_over_time = np.array(positions_over_time)
     X_final = positions_over_time[-1]
@@ -22,33 +22,123 @@ def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient
     plt.show()
 
 
+def flatten(points):
+    dim = points.shape[2]
+
+    x = points.reshape(-1, dim)[:, 0]
+    y = points.reshape(-1, dim)[:, 1]
+    
+    if dim == 2:
+        # If the data is 2D, set z-coordinates to zero
+        z = np.zeros_like(x)
+    elif dim == 3:
+        z = points.reshape(-1, dim)[:, 2]
+    else:
+        raise ValueError("Only 2D and 3D supported")
+    
+    return x, y, z
+
+
+def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient descent'):
+    points = np.array(positions_over_time)
+    if points.ndim == 2:
+        points = points[np.newaxis, :, :]
+    
+    N_points = len(points[0])
+    time_steps = len(points)
+
+    x, y, z = flatten(points)
+
+    # Create a figure
+    fig = go.Figure(
+        data=[go.Scatter3d(
+            x=x, 
+            y=y, 
+            z=z, 
+            mode='markers', 
+            marker=dict(color=['gray'] * (N_points * (time_steps - 1)) + ['red'] * N_points, 
+                        size=[5] * (N_points * (time_steps - 1)) + [15] * N_points,
+                        line=dict(width=0))
+        )],
+        layout=go.Layout(
+            title=title,
+            scene=dict(
+                xaxis=dict(range=[-10, 10], autorange=False),
+                yaxis=dict(range=[-10, 10], autorange=False),
+                zaxis=dict(range=[-10, 10], autorange=False),
+                aspectmode='cube'
+            ),
+            annotations=[dict(
+                showarrow=False, x=0.90, y=0.90,
+                xref="paper", yref="paper",
+                text=f"Iteration: {len(loss_over_time)-1}<br>Loss: {loss_over_time[-1]:.4f}",
+                font=dict(size=25)
+            )]
+        )
+    )
+
+    fig.show()
+
+
 def animate_gradient_descent(positions_over_time, loss_over_time):
-    positions_over_time = np.array(positions_over_time)
-    X_final = positions_over_time[-1]
-    loss_final = loss_over_time[-1]
+    points = np.array(positions_over_time)
+    if points.ndim == 2:
+        points = points[np.newaxis, :, :]
 
-    # Animation
-    fig, ax = plt.subplots()
-        
-    trace_scat = ax.scatter([], [], s=10, c='gray', alpha=0.5)
-    current_scat = ax.scatter(X_final[:, 0], X_final[:, 1], c='red')
-    all_previous_positions = []
+    N_points = len(points[0])
+    time_steps = len(points)
 
-    text = ax.text(0.98, 0.90, "", transform=ax.transAxes, ha='right', fontsize=10)
+    all_x, all_y, all_z = flatten(points)
 
-    def update(frame):
-        positions = positions_over_time[frame]
-        all_previous_positions.extend(positions.tolist())
-        trace_scat.set_offsets(all_previous_positions)
-        current_scat.set_offsets(positions)
+    fig = go.Figure(
+        data=[go.Scatter3d(
+            x=all_x[:N_points], 
+            y=all_y[:N_points], 
+            z=all_z[:N_points], 
+            mode='markers', 
+            marker=dict(color=["red"] * N_points, size=10)
+        )],
+        layout=go.Layout(
+            title="Gradient Descent Animation",
+            updatemenus=[dict(
+                type='buttons',
+                showactive=False,
+                buttons=[
+                    dict(
+                        label='Play',
+                        method='animate',
+                        args=[None, dict(frame=dict(duration=50, redraw=True), fromcurrent=True, mode="immediate")]
+                    )
+                    ]
+                )],
+            scene=dict(
+                xaxis=dict(range=[-10, 10], autorange=False),
+                yaxis=dict(range=[-10, 10], autorange=False),
+                zaxis=dict(range=[-10, 10], autorange=False),
+                aspectmode='cube'
+            )
+        ),
+        frames=[go.Frame(
+            data=[
+                go.Scatter3d(
+                    x=all_x[:(i+1)*N_points],
+                    y=all_y[:(i+1)*N_points],
+                    z=all_z[:(i+1)*N_points],
+                    mode='markers',
+                    marker=dict(
+                        color=['gray']*(N_points * i) + ['red']*N_points, 
+                        size=[5]*(N_points * i) + [15]*N_points,
+                        line=dict(width=0) 
+                    )
+                )
+            ],
+            layout=dict(annotations=[dict(
+                showarrow=False, x=0.90, y=0.90,
+                xref="paper", yref="paper",
+                text=f"Iteration: {i+1}<br>Loss: {loss_over_time[i]:.4f}",
+                font=dict(size=25)
+            )])
+            ) for i in range(1, time_steps)]
+    )
 
-        # Update the text
-        current_loss = loss_over_time[frame]
-        text.set_text(f"Iteration: {frame}\nLoss: {current_loss:.4f}")
-        
-        return trace_scat, current_scat, text
-
-    ani = FuncAnimation(fig, update, frames=len(loss_over_time), blit=True)
-
-    plt.axis('equal')
-    plt.show()
+    fig.show()

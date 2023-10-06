@@ -3,7 +3,7 @@ import numpy as np
 from python.gradient_descent import gradient_descent, gradient_descent_cache
 from python.gradient_descent_native import gradient_descent_native, gradient_descent_native_cache, PyMatrix
 from python.gradient_descent_JAX import gradient_descent_JAX, gradient_descent_cache_JAX
-from python.utils import plot_gradient_descent, animate_gradient_descent
+from python.utils import plot_gradient_descent, plot_gradient_descent_2D, animate_gradient_descent
 
 from timeit import timeit
 
@@ -12,10 +12,12 @@ def benchmark_gradient_descent(X, D):
     secs = timeit(lambda: gradient_descent(X, D, learning_rate=0.00001, num_iterations=1000), number=2) / 2
     print(f"Average time python numpy: {secs}")
 
+
 def benchmark_gradient_descent_JAX(X, D):
     secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=0.00001, num_iterations=1000), number=2) / 2
     print(f"Average time JAX: {secs}")
     
+
 def benchmark_gradient_descent_native(X, D):
     N = D.shape[0]
     D_native = PyMatrix(D.tolist(), N, N)
@@ -24,13 +26,24 @@ def benchmark_gradient_descent_native(X, D):
     print(f"Average time python native: {secs}")
 
 
-### 2D
-def generate_circle_points(N):
-    points = []
+def generate_radial_points(N, dim):
     r = 3
-    for i in range(N):
-        angle = 2 * np.pi * i / N
-        points.append([r*np.cos(angle), r*np.sin(angle)])
+    points = []
+    if dim == 2:
+        for i in range(N):
+            angle = 2 * np.pi * i / N
+            points.append([r * np.cos(angle), r * np.sin(angle)])
+    elif dim == 3:
+        for i in range(N):
+            phi = np.arccos(1 - 2 * (i / N))
+            theta = np.sqrt(N * np.pi) * phi
+            x = r * np.sin(phi) * np.cos(theta)
+            y = r * np.sin(phi) * np.sin(theta)
+            z = r * np.cos(phi)
+            points.append([x, y, z])
+    else:
+        raise ValueError("Only supports 2D and 3D")
+    
     return points
 
 
@@ -40,25 +53,23 @@ def generate_distance_matrix(points):
     
     for i in range(n):
         for j in range(i+1, n):
-            x1, y1 = points[i]
-            x2, y2 = points[j]
-            distance = np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+            distance = np.linalg.norm(np.array(points[i]) - np.array(points[j]))
             distance_matrix[i, j] = distance
             distance_matrix[j, i] = distance
     
     return distance_matrix
 
 
-
 if __name__ == "__main__":
     N = 10
+    dim = 2
 
-    circle = generate_circle_points(N)
+    circle = generate_radial_points(N, dim)
     D = np.array(generate_distance_matrix(circle), dtype=np.float64)
     D_native = PyMatrix(D.tolist(), N, N)
 
     np.random.seed(42)
-    dim = 2
+    
     X = np.random.rand(N, dim)  # use same starting values X for np and jax
     X_native = PyMatrix(X.tolist(), N, 2)
 
@@ -73,13 +84,13 @@ if __name__ == "__main__":
     benchmark_gradient_descent_JAX(X, D)
 
     ### PLOTTING
-    P, L = gradient_descent_cache(D, learning_rate=0.00001, num_iterations=1000)
+    P, L = gradient_descent_cache(D, learning_rate=0.0001, num_iterations=1000)
     plot_gradient_descent(P, L, title="Gradient Descent in python numpy")
     
-    P_native, L_native = gradient_descent_native_cache(D_native, learning_rate=0.00001, num_iterations=1000)
+    P_native, L_native = gradient_descent_native_cache(D_native, learning_rate=0.0001, num_iterations=1000)
     plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
 
-    P_JAX, L_JAX = gradient_descent_cache_JAX(D, learning_rate=0.00001, num_iterations=1000)
+    P_JAX, L_JAX = gradient_descent_cache_JAX(D, learning_rate=0.0001, num_iterations=1000)
     plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
     
-    animate_gradient_descent(P, L)
+    # animate_gradient_descent(P[:100], L[:100])

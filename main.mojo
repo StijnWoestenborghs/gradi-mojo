@@ -79,13 +79,13 @@ fn main():
     var X = Matrix[dtype](N, dim)
     X.rand()
     with Runtime() as rt:
-        gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.00001, num_iterations = 1000)
+        gradient_descent[dtype, nelts](X, D, rt, learning_rate = 0.0001, num_iterations = 1000)
 
     benchmark[dtype, nelts](N, dim)
 
 
     # var X = Matrix(N, dim)
     X.rand()
-    plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.00001, num_iterations = 1000)
+    plot_gradient_descent_cache[dtype](X, D, learning_rate = 0.0001, num_iterations = 1000)
   
 

@@ -1,7 +1,6 @@
 from algorithm import vectorize, parallelize, vectorize_unroll
 from memory import memset_zero, memset
 from random import rand
-from runtime.llcl import Runtime
 
 
 
@@ -22,7 +21,7 @@ struct Matrix[dtype: DType]:
         memset_zero(self.data, self.rows * self.cols)
 
     fn ones(inout self):
-        # memset(self.data, 1, self.rows * self.cols)    # v0.3.0: memset only takes in SIMD[ui8, 1] for now
+        # memset(self.data, 1, self.rows * self.cols)    # v0.4.0: memset only takes in SIMD[ui8, 1] for now
         for y in range(self.rows):
             for x in range(self.cols):
                 self[y, x] = 1
@@ -58,6 +57,7 @@ struct Matrix[dtype: DType]:
     @always_inline
     fn __str__(self) -> String:
         """
+        v0.4.0
         Until mojo has traits, there isn't a clean implementation of __str__ and __repr__ that are usable for a polymorphic implementation of print.
         https://github.com/modularml/mojo/discussions/325 --> use print(X.__str__()) instead
         """
@@ -82,7 +82,7 @@ struct Matrix[dtype: DType]:
 
         return transposed
     
-    fn dot[nelts: Int](inout self, other: Matrix[dtype], rt: Runtime) -> Matrix[dtype]:
+    fn dot[nelts: Int](inout self, other: Matrix[dtype]) -> Matrix[dtype]:
         var C = Matrix[dtype](self.rows, other.cols)
         C.zeros()
 
@@ -98,7 +98,7 @@ struct Matrix[dtype: DType]:
 
                 vectorize[nelts, dot](C.cols)
 
-        parallelize[calc_row](rt, C.rows)
+        parallelize[calc_row](C.rows, C.rows)
         
         return C
 

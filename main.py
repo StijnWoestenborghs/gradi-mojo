@@ -9,26 +9,6 @@ from python.utils import plot_gradient_descent, plot_gradient_descent_2D, animat
 from timeit import timeit
 
 
-def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
-    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time python native: {secs}")
-
-
-def benchmark_gradient_descent(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time python numpy: {secs}")
-
-
-def benchmark_gradient_descent_JAX(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time JAX: {secs}")
-
-
-def benchmark_gradient_descent_cpp(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time C++ binding: {secs}")
-
-
 def generate_radial_points(N, dim):
     r = 3
     points = []
@@ -63,11 +43,29 @@ def generate_distance_matrix(points):
     return distance_matrix
 
 
-if __name__ == "__main__":
-    N = 10
-    dim = 2
-    lr = 0.0001
-    niter = 1000
+def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
+    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=10) / 10
+    print(f"Average time python native: {secs}")
+
+
+def benchmark_gradient_descent(X, D, lr, niter):
+    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    print(f"Average time python numpy: {secs}")
+
+
+def benchmark_gradient_descent_JAX(X, D, lr, niter):
+    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    print(f"Average time JAX: {secs}")
+
+
+def benchmark_gradient_descent_cpp(X, D, lr, niter):
+    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    print(f"Average time C++ binding: {secs}")
+
+
+
+
+def benchmarks(N, dim, lr, niter, plots=True):
 
     # Create optimization target
     circle = generate_radial_points(N, dim)
@@ -91,17 +89,36 @@ if __name__ == "__main__":
     benchmark_gradient_descent_JAX(X.copy(), D, lr=lr, niter=niter)
     benchmark_gradient_descent_cpp(X.copy(), D, lr=lr, niter=niter)
 
-    ### PLOTTING
-    # P, L = gradient_descent_cache(X.copy(), D, learning_rate=lr, num_iterations=niter)
-    # plot_gradient_descent_2D(P, L, title="Gradient Descent in python numpy")
-    # plot_gradient_descent(P[-1], L[-1], title="Gradient Descent in python numpy")
-    
-    # P_native, L_native = gradient_descent_native_cache(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
-    # plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
+    ## Visualization
+    if plots:
+        P, L = gradient_descent_cache(X.copy(), D, learning_rate=lr, num_iterations=niter)
+        plot_gradient_descent_2D(P, L, title="Gradient Descent in python numpy")
+        plot_gradient_descent(P, L, title="Gradient Descent in python numpy")
+        
+        P_native, L_native = gradient_descent_native_cache(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
+        plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
 
-    # P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
-    # plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
-    
-    # plot_gradient_descent(p_cpp, -1, title="Gradient Descent in C++")
+        # TODO
+        # P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
+        # plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
+        
+        # (cache function not implemented)
+        plot_gradient_descent(p_cpp, -1, title="Gradient Descent in C++")
 
-    # # animate_gradient_descent(P[:100], L[:100])
+        # animate_gradient_descent(P[:100], L[:100])
+
+
+if __name__ == "__main__":
+    N = 10
+    dim = 2
+    lr = 0.0001
+    niter = 1000
+    plots = True
+
+    benchmarks(
+        N=N,
+        dim=dim,
+        lr=lr,
+        niter=niter,
+        plots=plots
+    )

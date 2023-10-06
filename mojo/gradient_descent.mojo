@@ -41,12 +41,12 @@ fn gradient_descent[dtype: DType, nelts: Int](
 
     var grad = Matrix[dtype](X.rows, X.cols)
 
-    # for _ in range(num_iterations):
-    #     grad.zeros()
-    #     compute_gradient[dtype](grad, X, D)
-    #     for r in range(X.rows):
-    #         for c in range(X.cols):
-    #             X[r, c] -= learning_rate * grad[r, c]
+    for _ in range(num_iterations):
+        grad.zeros()
+        compute_gradient[dtype](grad, X, D)
+        for r in range(X.rows):
+            for c in range(X.cols):
+                X[r, c] -= learning_rate * grad[r, c]
 
     
     # ## Using extended matrix methods
@@ -56,13 +56,13 @@ fn gradient_descent[dtype: DType, nelts: Int](
     #     X -= learning_rate * grad
 
 
-    ## Parallel gradient computation
-    for _ in range(num_iterations):
-        grad.zeros()
-        compute_gradient[dtype, nelts](grad, X, D)
-        for r in range(X.rows):
-            for c in range(X.cols):
-                X[r, c] -= learning_rate * grad[r, c]
+    # ## Parallel gradient computation
+    # for _ in range(num_iterations):
+    #     grad.zeros()
+    #     compute_gradient[dtype, nelts](grad, X, D)
+    #     for r in range(X.rows):
+    #         for c in range(X.cols):
+    #             X[r, c] -= learning_rate * grad[r, c]
 
 
 

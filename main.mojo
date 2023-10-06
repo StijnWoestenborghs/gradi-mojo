@@ -1,4 +1,5 @@
 from benchmark import Benchmark
+from python.python import Python
 from math import sin, cos, sqrt, acos
 
 from mojo.gradi.matrix import Matrix
@@ -83,10 +84,11 @@ fn main():
 
     alias N = 10
     alias dim = 2
-    alias lr = 0.00001
+    alias lr = 0.0001
     alias niter = 1000
     alias dtype = DType.float32
     alias nelts = simdwidthof[dtype]()
+    let plots: Bool = False
 
     # Generate optimization target
     let points: Matrix[dtype]
@@ -101,17 +103,29 @@ fn main():
     ### Without visuals
     gradient_descent[dtype, nelts](X, D, learning_rate=lr, num_iterations=niter)
 
-    ### Benchmark
+    ### Benchmark Mojo
     benchmark[dtype, nelts](N, dim, lr=lr, niter=niter)
 
-    ### PLOTTING
-    # var X = Matrix(N, dim)
-    
+    ### PLOTTING  
     try:
-        X.rand()
-        _ = plot_gradient_descent_cache[dtype](X, D, learning_rate=lr, num_iterations=niter)
+        if plots:
+            X.rand()
+            _ = plot_gradient_descent_cache[dtype](X, D, learning_rate=lr, num_iterations=niter)
     except e:
         print("Error: ", e)
 
-  
 
+    ### Benchmarks from python
+    # [python native, numpy, jax, C++]
+    try:
+        Python.add_to_path(".")
+        let pymain = Python.import_module("main")
+        _ = pymain.benchmarks(
+            N,
+            dim,
+            lr,
+            niter,
+            plots
+        )
+    except e:
+        print("Error: ", e)

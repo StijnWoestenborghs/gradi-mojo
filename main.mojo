@@ -90,6 +90,23 @@ fn main():
     alias nelts = simdwidthof[dtype]()
     let plots: Bool = False
 
+
+    ### Benchmarks from python
+    # [python native, numpy, jax, C++ (python binding)]
+    try:
+        Python.add_to_path(".")
+        let pymain = Python.import_module("main")
+        _ = pymain.benchmarks(
+            N,
+            dim,
+            lr,
+            niter,
+            plots
+        )
+    except e:
+        print("Error: ", e)
+
+
     # Generate optimization target
     let points: Matrix[dtype]
     let D: Matrix[dtype]
@@ -115,17 +132,4 @@ fn main():
         print("Error: ", e)
 
 
-    ### Benchmarks from python
-    # [python native, numpy, jax, C++]
-    try:
-        Python.add_to_path(".")
-        let pymain = Python.import_module("main")
-        _ = pymain.benchmarks(
-            N,
-            dim,
-            lr,
-            niter,
-            plots
-        )
-    except e:
-        print("Error: ", e)
+

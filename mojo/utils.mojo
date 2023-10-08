@@ -1,11 +1,11 @@
 from python.python import Python
 from utils.vector import InlinedFixedVector
 
-from mojo.gradient_descent import gradient_descent, compute_gradient, loss
+from mojo.gradient_descent import gradient_descent, compute_gradient, compute_gradient_parallel, loss
 from mojo.gradi.matrix import Matrix
 
 
-def plot_gradient_descent_cache[dtype: DType](
+def plot_gradient_descent_cache[dtype: DType, nelts: Int](
         inout X: Matrix[dtype], 
         D: Matrix[dtype], 
         learning_rate: SIMD[dtype, 1], 
@@ -30,6 +30,7 @@ def plot_gradient_descent_cache[dtype: DType](
 
         grad.zeros()
         compute_gradient[dtype](grad, X, D)
+        # compute_gradient_parallel[dtype, nelts](grad, X, D)
         for r in range(X.rows):
             for c in range(X.cols):
                 X[r, c] -= learning_rate * grad[r, c]
@@ -37,7 +38,7 @@ def plot_gradient_descent_cache[dtype: DType](
     # Add last element
     set_element[dtype](positions_over_time, loss_over_time, X, D, num_iterations)
 
-    visuals.plot_gradient_descent(positions_over_time, loss_over_time)
+    visuals.plot_gradient_descent(positions_over_time[-1], loss_over_time[-1])
     visuals.animate_gradient_descent(positions_over_time, loss_over_time, "Gradient Descent Animation: Mojo", False)
 
 

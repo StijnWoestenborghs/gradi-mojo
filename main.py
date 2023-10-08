@@ -44,12 +44,12 @@ def generate_distance_matrix(points):
 
 
 def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
-    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=2) / 2
     print(f"Average time python native: {secs}")
 
 
 def benchmark_gradient_descent(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=2) / 2
     print(f"Average time python numpy: {secs}")
 
 

@@ -78,10 +78,10 @@ fn main():
     alias nelts = simdwidthof[dtype]()
 
     # Generate optimization target
-    var points: Matrix[dtype]
-    alias n_circle = 100
-    alias dim_circle = 3
-    points = generate_radial_points[dtype](n_circle, dim_circle)
+    let points: Matrix[dtype]
+    # alias n_circle = 100
+    # alias dim_circle = 3
+    # points = generate_radial_points[dtype](n_circle, dim_circle)
     
     try:
         points = read_shape[dtype]("./shapes/flame.csv")
@@ -92,9 +92,10 @@ fn main():
 
     # Optimization input
     alias dim = 2
-    alias lr = 0.0001
+    alias lr = 0.0002
     alias niter = 1000
     alias plots = True
+    alias run_python = False
 
     let D: Matrix[dtype]
     D = generate_distance_matrix[dtype](points)
@@ -102,15 +103,16 @@ fn main():
     ### Benchmarks from python
     # [python native, numpy, jax, C++ (python binding)]
     try:
-        Python.add_to_path(".")
-        let pymain = Python.import_module("main")
-        _ = pymain.benchmarks(
-            D.to_python(),
-            dim,
-            lr,
-            niter,
-            plots
-        )
+        if run_python:
+            Python.add_to_path(".")
+            let pymain = Python.import_module("main")
+            _ = pymain.benchmarks(
+                D.to_python(),
+                dim,
+                lr,
+                niter,
+                plots
+            )
     except e:
         print("Error: ", e)
 
@@ -129,7 +131,7 @@ fn main():
     try:
         if plots:
             X.rand()
-            _ = plot_gradient_descent_cache[dtype](X, D, learning_rate=lr, num_iterations=niter)
+            _ = plot_gradient_descent_cache[dtype, nelts](X, D, learning_rate=lr, num_iterations=niter)
     except e:
         print("Error: ", e)
 

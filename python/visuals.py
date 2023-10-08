@@ -40,6 +40,11 @@ def flatten(points):
 
 
 def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient descent'):
+    '''
+    Plots all positions, but also able to take in only the last element.
+    If the plot shows empyt your browser probably runs out of memory.
+    '''
+    
     print(f"Plotting: {title}...")
     points = np.array(positions_over_time)
     if points.ndim == 2:

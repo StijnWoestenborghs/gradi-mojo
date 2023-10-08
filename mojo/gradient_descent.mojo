@@ -43,8 +43,8 @@ fn gradient_descent[dtype: DType, nelts: Int](
 
     for _ in range(num_iterations):
         grad.zeros()
-        # compute_gradient[dtype](grad, X, D)
-        compute_gradient_parallel[dtype, nelts](grad, X, D)
+        compute_gradient[dtype](grad, X, D)
+        # compute_gradient_parallel[dtype, nelts](grad, X, D)
         for r in range(X.rows):
             for c in range(X.cols):
                 X[r, c] -= learning_rate * grad[r, c]

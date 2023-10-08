@@ -38,6 +38,7 @@ def plot_gradient_descent_cache[dtype: DType](
     set_element[dtype](positions_over_time, loss_over_time, X, D, num_iterations)
 
     visuals.plot_gradient_descent(positions_over_time, loss_over_time)
+    visuals.animate_gradient_descent(positions_over_time, loss_over_time, "Gradient Descent Animation: Mojo", False)
 
 
 def set_element[dtype: DType](inout positions_over_time: PythonObject, inout loss_over_time: PythonObject, X: Matrix[dtype], D: Matrix[dtype], i: Int):

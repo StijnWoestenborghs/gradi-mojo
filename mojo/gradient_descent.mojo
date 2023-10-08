@@ -43,7 +43,8 @@ fn gradient_descent[dtype: DType, nelts: Int](
 
     for _ in range(num_iterations):
         grad.zeros()
-        compute_gradient[dtype](grad, X, D)
+        # compute_gradient[dtype](grad, X, D)
+        compute_gradient_parallel[dtype, nelts](grad, X, D)
         for r in range(X.rows):
             for c in range(X.cols):
                 X[r, c] -= learning_rate * grad[r, c]
@@ -56,19 +57,10 @@ fn gradient_descent[dtype: DType, nelts: Int](
     #     X -= learning_rate * grad
 
 
-    # ## Parallel gradient computation
-    # for _ in range(num_iterations):
-    #     grad.zeros()
-    #     compute_gradient[dtype, nelts](grad, X, D)
-    #     for r in range(X.rows):
-    #         for c in range(X.cols):
-    #             X[r, c] -= learning_rate * grad[r, c]
-
-
 
 ### Vector & Parallel
 
-fn compute_gradient[dtype: DType, nelts: Int](inout grad: Matrix[dtype], X: Matrix[dtype], D: Matrix[dtype]):
+fn compute_gradient_parallel[dtype: DType, nelts: Int](inout grad: Matrix[dtype], X: Matrix[dtype], D: Matrix[dtype]):
     
     @parameter
     fn calc_row(i: Int):
@@ -82,13 +74,6 @@ fn compute_gradient[dtype: DType, nelts: Int](inout grad: Matrix[dtype], X: Matr
             for d in range(X.cols):
                 grad[i, d] += 4 * (squared_distance - D[i, j] ** 2) * (X[i, d] - X[j, d])
 
-            # @parameter
-            # fn grad_vector[nelts: Int](d: Int):
-            #     grad.store[nelts](
-            #         i, d, grad.load[nelts](i, d) + 4 * (squared_distance - D[i, j] ** 2) * (X.load[nelts](i, d) - X.load[nelts](j, d))
-            #     )
-                
-            # vectorize[nelts, grad_vector](X.cols)
-
-    parallelize[calc_row](X.rows, X.rows)
+    # Available number of logical CPUs on my machine: 20
+    parallelize[calc_row](X.rows, 20)
 

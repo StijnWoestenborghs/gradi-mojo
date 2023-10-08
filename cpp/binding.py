@@ -5,7 +5,8 @@ from ctypes import *
 import numpy as np
 
 
-libc = CDLL("cpp/build/lib/gradient_descent.so")
+# libc = CDLL("cpp/build/lib/gradient_descent.so")
+libc = CDLL("cpp/build/lib/gradient_descent_p20.so")
 run_binding_external = libc.run_binding_external
 run_binding_external.argtypes = [c_char_p, c_int, POINTER(c_char_p), POINTER(c_int)]
 run_binding_external.restype = c_int

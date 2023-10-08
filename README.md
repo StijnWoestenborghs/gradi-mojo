@@ -14,8 +14,4 @@ Here are several ways to determine the number of logical CPUs on a Linux system:
 nproc
 
 
-![Modular3](https://github.com/StijnWoestenborghs/gradi-mojo/tree/main/shapes/animation/modular3.GIF)
-
-![Modular3](https://github.com/StijnWoestenborghs/gradi-mojo/tree/main/shapes/animation/modular3-2.GIF)
-
-[Modular3-video](https://github.com/StijnWoestenborghs/gradi-mojo/tree/main/shapes/animation/modular3-2.mp4)
+![Modular3](https://giphy.com/embed/KRLol06NXixZcGoZcA)

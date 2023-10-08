@@ -83,7 +83,7 @@ def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient
     fig.show()
 
 
-def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradient Descent Animation"):
+def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradient Descent Animation", trace=False):
     print(f"Animating: {title}...")
     points = np.array(positions_over_time)
     if points.ndim == 2:
@@ -111,7 +111,7 @@ def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradien
                     dict(
                         label='Play',
                         method='animate',
-                        args=[None, dict(frame=dict(duration=50, redraw=True), fromcurrent=True, mode="immediate")]
+                        args=[None, dict(frame=dict(duration=1, redraw=True), fromcurrent=True, mode="immediate")]
                     )
                     ]
                 )],
@@ -125,13 +125,13 @@ def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradien
         frames=[go.Frame(
             data=[
                 go.Scatter3d(
-                    x=all_x[:(i+1)*N_points],
-                    y=all_y[:(i+1)*N_points],
-                    z=all_z[:(i+1)*N_points],
+                    x=all_x[:(i+1)*N_points] if trace else all_x[i*N_points:(i+1)*N_points],
+                    y=all_y[:(i+1)*N_points] if trace else all_y[i*N_points:(i+1)*N_points],
+                    z=all_z[:(i+1)*N_points] if trace else all_z[i*N_points:(i+1)*N_points],
                     mode='markers',
                     marker=dict(
-                        color=['gray']*(N_points * i) + ['red']*N_points, 
-                        size=[5]*(N_points * i) + [15]*N_points,
+                        color=['gray']*(N_points * i) + ['red']*N_points if trace else ['red']*N_points, 
+                        size=[5]*(N_points * i) + [15]*N_points if trace else [15]*N_points,
                         line=dict(width=0) 
                     )
                 )

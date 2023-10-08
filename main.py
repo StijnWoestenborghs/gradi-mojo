@@ -101,10 +101,10 @@ def benchmarks(D, dim, lr, niter, plots=True):
         # P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
         # plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
         
-        # (cache function not implemented)
+        # (cache function not implemented: Can only plot final value)
         plot_gradient_descent(p_cpp, -1, title="Gradient Descent in C++")
 
-        # animate_gradient_descent(P[:100], L[:100])
+        animate_gradient_descent(P, L, trace=False)
 
 
 if __name__ == "__main__":

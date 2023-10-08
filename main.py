@@ -10,7 +10,7 @@ from timeit import timeit
 
 
 def generate_radial_points(N, dim):
-    r = 3
+    r = 0.5
     points = []
     if dim == 2:
         for i in range(N):
@@ -68,8 +68,11 @@ def benchmark_gradient_descent_cpp(X, D, lr, niter):
 def benchmarks(N, dim, lr, niter, plots=True):
 
     # Create optimization target
-    circle = generate_radial_points(N, dim)
-    D = np.array(generate_distance_matrix(circle), dtype=np.float64)
+    points = generate_radial_points(N, dim)
+    # points = np.loadtxt("./shapes/modular.csv", delimiter=",")
+    
+    N = len(points)
+    D = np.array(generate_distance_matrix(points), dtype=np.float64)
     D_native = PyMatrix(D.tolist(), N, N)
 
     # Initial starting point
@@ -109,7 +112,7 @@ def benchmarks(N, dim, lr, niter, plots=True):
 
 
 if __name__ == "__main__":
-    N = 10
+    N = 100
     dim = 2
     lr = 0.0001
     niter = 1000

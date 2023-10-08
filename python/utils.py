@@ -66,9 +66,9 @@ def plot_gradient_descent(positions_over_time, loss_over_time, title = 'Gradient
         layout=go.Layout(
             title=title,
             scene=dict(
-                xaxis=dict(range=[-10, 10], autorange=False),
-                yaxis=dict(range=[-10, 10], autorange=False),
-                zaxis=dict(range=[-10, 10], autorange=False),
+                xaxis=dict(range=[-2, 2], autorange=False),
+                yaxis=dict(range=[-2, 2], autorange=False),
+                zaxis=dict(range=[-2, 2], autorange=False),
                 aspectmode='cube'
             ),
             annotations=[dict(
@@ -116,9 +116,9 @@ def animate_gradient_descent(positions_over_time, loss_over_time, title="Gradien
                     ]
                 )],
             scene=dict(
-                xaxis=dict(range=[-10, 10], autorange=False),
-                yaxis=dict(range=[-10, 10], autorange=False),
-                zaxis=dict(range=[-10, 10], autorange=False),
+                xaxis=dict(range=[-2, 2], autorange=False),
+                yaxis=dict(range=[-2, 2], autorange=False),
+                zaxis=dict(range=[-2, 2], autorange=False),
                 aspectmode='cube'
             )
         ),

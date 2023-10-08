@@ -14,7 +14,7 @@ alias PI = 3.141592653589793
 fn generate_radial_points[dtype: DType](N: Int, dim: Int) -> Matrix[dtype]:
     var points = Matrix[dtype](N, dim)
     let angle: SIMD[dtype, 1]
-    let r: Int = 3
+    let r: SIMD[dtype, 1] = 0.5
     
     if dim == 2:
         for i in range(N):

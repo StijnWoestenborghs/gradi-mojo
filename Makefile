@@ -37,3 +37,6 @@ cpp-build:
 
 	@echo "Running C++ executable"
 	./cpp/build/bin/gradient_descent
+
+shape:
+	. .venv/bin/activate && python -m shapes.parse_svg

@@ -1,3 +1,4 @@
+from python.python import Python
 from algorithm import vectorize, parallelize, vectorize_unroll
 from memory import memset_zero, memset
 from random import rand
@@ -133,3 +134,14 @@ struct Matrix[dtype: DType]:
         for y in range(self.rows):
             for x in range(self.cols):
                 self[y, x] -=  other[y, x]
+
+    def to_python(self) -> PythonObject:
+        try:
+            np = Python.import_module("numpy")
+            pymatrix = np.zeros((self.rows, self.cols), np.float64)
+            for y in range(self.rows):
+                for x in range(self.cols):
+                    pymatrix.itemset((y, x), self[y, x])
+            return pymatrix
+        except:
+            raise Error("Failed to convert Matrix to PythonObject")

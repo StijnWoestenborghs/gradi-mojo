@@ -6,8 +6,6 @@ from mojo.gradi.matrix import Matrix
 from mojo.gradient_descent import gradient_descent
 from mojo.plot_gradient import plot_gradient_descent_cache
 
-# from tensor import Tensor
-
 alias PI = 3.141592653589793
 
 
@@ -57,14 +55,10 @@ fn generate_distance_matrix[dtype: DType](points: Matrix[dtype]) -> Matrix[dtype
 
 
 @always_inline
-fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int, lr: SIMD[dtype, 1], niter: Int):
-    let points: Matrix[dtype]
-    let D: Matrix[dtype]
-    
-    points = generate_radial_points[dtype](N, dim)
-    D = generate_distance_matrix[dtype](points)
+fn benchmark[dtype: DType, nelts: Int](D: Matrix[dtype], dim: Int, lr: SIMD[dtype, 1], niter: Int):
 
-    var X = Matrix[dtype](N, dim)
+    # Initial starting point
+    var X = Matrix[dtype](D.rows, dim)
     X.rand()
 
     @parameter
@@ -79,17 +73,23 @@ fn benchmark[dtype: DType, nelts: Int](N: Int, dim: Int, lr: SIMD[dtype, 1], nit
 
 
 fn main():
-    #### TODO: implement with tensor ? 
-    # let t = Tensor[DType.float64](10, 2)
 
-    alias N = 10
-    alias dim = 2
-    alias lr = 0.0001
-    alias niter = 1000
     alias dtype = DType.float32
     alias nelts = simdwidthof[dtype]()
-    let plots: Bool = False
 
+    # Generate optimization target
+    let points: Matrix[dtype]
+    let D: Matrix[dtype]
+    alias n_circle = 10
+    alias dim_circle = 2
+    points = generate_radial_points[dtype](n_circle, dim_circle)
+    D = generate_distance_matrix[dtype](points)
+
+    # Optimization input
+    alias dim = 2
+    alias lr = 0.001
+    alias niter = 1000
+    alias plots = False
 
     ### Benchmarks from python
     # [python native, numpy, jax, C++ (python binding)]
@@ -97,7 +97,7 @@ fn main():
         Python.add_to_path(".")
         let pymain = Python.import_module("main")
         _ = pymain.benchmarks(
-            N,
+            D.to_python(),
             dim,
             lr,
             niter,
@@ -107,21 +107,15 @@ fn main():
         print("Error: ", e)
 
 
-    # Generate optimization target
-    let points: Matrix[dtype]
-    let D: Matrix[dtype]
-    points = generate_radial_points[dtype](N, dim)
-    D = generate_distance_matrix[dtype](points)
-
     # Initial starting point
-    var X = Matrix[dtype](N, dim)
+    var X = Matrix[dtype](D.rows, dim)
     X.rand()
 
     ### Without visuals
     gradient_descent[dtype, nelts](X, D, learning_rate=lr, num_iterations=niter)
 
     ### Benchmark Mojo
-    benchmark[dtype, nelts](N, dim, lr=lr, niter=niter)
+    benchmark[dtype, nelts](D, dim, lr=lr, niter=niter)
 
     ### PLOTTING  
     try:

@@ -65,14 +65,10 @@ def benchmark_gradient_descent_cpp(X, D, lr, niter):
 
 
 
-def benchmarks(N, dim, lr, niter, plots=True):
+def benchmarks(D, dim, lr, niter, plots=True):
 
-    # Create optimization target
-    points = generate_radial_points(N, dim)
-    # points = np.loadtxt("./shapes/modular.csv", delimiter=",")
-    
-    N = len(points)
-    D = np.array(generate_distance_matrix(points), dtype=np.float64)
+    N = len(D)
+    D = np.array(D, dtype=np.float64)
     D_native = PyMatrix(D.tolist(), N, N)
 
     # Initial starting point
@@ -112,14 +108,22 @@ def benchmarks(N, dim, lr, niter, plots=True):
 
 
 if __name__ == "__main__":
-    N = 100
+    
+    # Create optimization target
+    n_circle = 10
+    dim_circle = 2
+    points = generate_radial_points(n_circle, dim_circle)           # circle/sphere
+    # points = np.loadtxt("./shapes/modular.csv", delimiter=",")      # modular (N = 1000)
+    # points = np.loadtxt("./shapes/flame.csv", delimiter=",")        # flame (N = 307)
+    
+    # Optimization input
     dim = 2
-    lr = 0.0001
+    lr = 0.001
     niter = 1000
     plots = True
 
     benchmarks(
-        N=N,
+        D=generate_distance_matrix(points),
         dim=dim,
         lr=lr,
         niter=niter,

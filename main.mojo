@@ -4,7 +4,7 @@ from math import sin, cos, sqrt, acos
 
 from mojo.gradi.matrix import Matrix
 from mojo.gradient_descent import gradient_descent
-from mojo.plot_gradient import plot_gradient_descent_cache
+from mojo.utils import plot_gradient_descent_cache, read_shape
 
 alias PI = 3.141592653589793
 
@@ -78,18 +78,26 @@ fn main():
     alias nelts = simdwidthof[dtype]()
 
     # Generate optimization target
-    let points: Matrix[dtype]
-    let D: Matrix[dtype]
-    alias n_circle = 10
-    alias dim_circle = 2
+    var points: Matrix[dtype]
+    alias n_circle = 100
+    alias dim_circle = 3
     points = generate_radial_points[dtype](n_circle, dim_circle)
-    D = generate_distance_matrix[dtype](points)
+    
+    try:
+        points = read_shape[dtype]("./shapes/flame.csv")
+        # points = read_shape[dtype]("./shapes/modular.csv")
+    except e:
+        print("Failed to parse shape: ", e)
+
 
     # Optimization input
     alias dim = 2
-    alias lr = 0.001
+    alias lr = 0.0001
     alias niter = 1000
-    alias plots = False
+    alias plots = True
+
+    let D: Matrix[dtype]
+    D = generate_distance_matrix[dtype](points)
 
     ### Benchmarks from python
     # [python native, numpy, jax, C++ (python binding)]

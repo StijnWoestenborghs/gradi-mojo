@@ -4,7 +4,7 @@ from cpp.binding import gradient_descent_cpp
 from python.gradient_descent import gradient_descent, gradient_descent_cache
 from python.gradient_descent_native import gradient_descent_native, gradient_descent_native_cache, PyMatrix
 from python.gradient_descent_JAX import gradient_descent_JAX, gradient_descent_cache_JAX
-from python.utils import plot_gradient_descent, plot_gradient_descent_2D, animate_gradient_descent
+from python.visuals import plot_gradient_descent, plot_gradient_descent_2D, animate_gradient_descent
 
 from timeit import timeit
 

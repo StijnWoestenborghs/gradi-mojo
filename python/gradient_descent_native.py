@@ -1,6 +1,3 @@
-import random
-
-
 class PyMatrix:
     def __init__(self, value, rows, cols):
         self.value = value

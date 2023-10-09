@@ -13,11 +13,5 @@ To get the maximum available number of threads on your Linux machine, you typica
 Here are several ways to determine the number of logical CPUs on a Linux system:
 nproc
 
+![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/circle.gif?raw=true)
 
-![](https://github.com/StijnWoestenborghs/gradi-mojo/tree/gifs/shapes/gifs/circle.gif)
-
-![](https://github.com/StijnWoestenborghs/gradi-mojo/tree/gifs/shapes/gifs/flame.gif)
-
-![](https://github.com/StijnWoestenborghs/gradi-mojo/tree/gifs/shapes/gifs/modular.gif)
-
-![](https://github.com/StijnWoestenborghs/gradi-mojo/tree/gifs/shapes/gifs/sphere.gif)

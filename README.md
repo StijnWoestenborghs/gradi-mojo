@@ -8,11 +8,11 @@
 
 ![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/circle.gif?raw=true)
 
-![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/sphere.gif?raw=true)
+<!-- ![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/sphere.gif?raw=true)
 
 ![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/flame.gif?raw=true)
 
-![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/modular.gif?raw=true)
+![Circle](https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/modular.gif?raw=true) -->
 
 
 

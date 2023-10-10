@@ -8,10 +8,10 @@
 
 <table>
 <tr>
-<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/circle.gif?raw=true" alt="Circle"></td>
-<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/sphere.gif?raw=true" alt="Sphere"></td>
-<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/flame.gif?raw=true" alt="Flame"></td>
-<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/gifs/shapes/gifs/modular.gif?raw=true" alt="Modular"></td>
+<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/main/shapes/gifs/circle.gif?raw=true" alt="Circle"></td>
+<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/main/shapes/gifs/sphere.gif?raw=true" alt="Sphere"></td>
+<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/main/shapes/gifs/flame.gif?raw=true" alt="Flame"></td>
+<td><img src="https://github.com/StijnWoestenborghs/gradi-mojo/blob/main/shapes/gifs/modular.gif?raw=true" alt="Modular"></td>
 </tr>
 </table>
 

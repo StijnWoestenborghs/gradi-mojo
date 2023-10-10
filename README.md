@@ -17,7 +17,7 @@
 
 
 
-## 
+## Project Setup
 
 
 
@@ -75,5 +75,59 @@ First unzip the 3rd party eigen-3.4.0.zip library in the `./cpp/include/` folder
 
 To change the parellelization of the gradient calculations: Identify the number of logical CPUs on a Linux system: `nproc` And configure the number of workers in `./cpp/src/gradient_descent.cpp`. After building the sharded object (`make cpp-build`). Configure the exect *.so file for the Python binding in `./cpp/binding.py`
 > libc = CDLL("cpp/build/lib/gradient_descent_p20.so")
+
+
+## Gradient Descent Algorithm
+
+
+$$
+D = \begin{bmatrix}
+0 & D_{12} &  \cdots & D_{1N} \\
+D_{12} & 0 &  \cdots & D_{2N} \\
+D_{13} & 0 & \cdots & D_{3N} \\
+\vdots & \vdots  & \ddots & \vdots \\
+D_{1N} & D_{2N} &  \cdots & 0 \\
+\end{bmatrix}
+$$
+
+
+
+$$
+X = \begin{bmatrix} X_1 \\ X_2 \\ \vdots \\ X_N \end{bmatrix} = \begin{bmatrix}
+x_1 & y_1 & z_1 \\
+x_2 & y_2 & z_2 \\
+x_3 & y_3 & z_3 \\
+\vdots & \vdots & \vdots \\
+x_N & y_N & z_N \\
+\end{bmatrix}
+$$
+
+
+
+
+
+$$
+\text{loss} = \sum_i \sum_j \left( \lVert \mathbf{X}_i - \mathbf{X}_j \rVert^2 - D_{ij}^2 \right)^2
+$$
+
+
+
+
+$$
+\frac{\partial \text{loss}}{\partial X_i} = \frac{\partial}{\partial X_i} \left( \sum_j \left( \lVert X_i - X_j \rVert^2 - D_{ij}^2 \right)^2 \right) = 2u \frac{du}{\partial X_i}
+\\ \text{where } u = \lVert X_i - X_j \rVert^2 - D_{ij}^2
+\\= 2 \left( \sum_j \left( \lVert X_i - X_j \rVert^2 - D_{ij}^2 \right) \right) \times 2 (X_i - X_j)
+\\= 4 \sum_j \left( \lVert X_i - X_j \rVert^2 - D_{ij}^2 \right) \times (X_i - X_j)
+$$
+
+
+$$
+\nabla_X \text{loss} = \begin{bmatrix} 
+\frac{\partial \text{loss}}{\partial X_1} \\
+\frac{\partial \text{loss}}{\partial X_2} \\
+\vdots \\
+\frac{\partial \text{loss}}{\partial X_N}
+\end{bmatrix}
+$$
 
 

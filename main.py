@@ -3,9 +3,8 @@ import numpy as np
 from cpp.binding import gradient_descent_cpp
 from python.gradient_descent import gradient_descent, gradient_descent_cache
 from python.gradient_descent_native import gradient_descent_native, gradient_descent_native_cache, PyMatrix
-from python.gradient_descent_JAX import gradient_descent_JAX, gradient_descent_cache_JAX, gradient_descent_JAX2, gradient_descent_JAX3, gradient_descent_JAX4
+from python.gradient_descent_JAX import gradient_descent_JAX, gradient_descent_cache_JAX, gradient_descent_JAX3
 from python.visuals import plot_gradient_descent, plot_gradient_descent_2D, animate_gradient_descent
-from python.casadi import casadi_solve
 
 from timeit import timeit
 
@@ -53,30 +52,17 @@ def benchmark_gradient_descent(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time python numpy: {secs}")
 
-
 def benchmark_gradient_descent_JAX(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time JAX: {secs}")
 
-def benchmark_gradient_descent_JAX_2(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX2(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time JAX2: {secs}")
-
 def benchmark_gradient_descent_JAX_3(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent_JAX3(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time JAX3: {secs}")
-
-def benchmark_gradient_descent_JAX_4(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX4(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
-    print(f"Average time JAX4: {secs}")
     
 def benchmark_gradient_descent_cpp(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time C++ binding: {secs}")
-
-def benchmark_gradient_descent_Casadi(X, D):
-    secs = timeit(lambda: casadi_solve(X, D), number=10) / 10
-    print(f"Average time Casadi: {secs}")
 
 
 def benchmarks(D, dim, lr, niter, plots=True):
@@ -94,20 +80,14 @@ def benchmarks(D, dim, lr, niter, plots=True):
     p1 = gradient_descent_native(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
     p2 = gradient_descent(X.copy(), D, learning_rate=lr, num_iterations=niter)
     p3 = gradient_descent_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
-    p4 = gradient_descent_JAX2(X.copy(), D, learning_rate=lr, num_iterations=niter)
     p5 = gradient_descent_JAX3(X.copy(), D, learning_rate=lr, num_iterations=niter)
-    p6 = gradient_descent_JAX4(X.copy(), D, learning_rate=lr, num_iterations=niter)
-    p7 = casadi_solve(X.copy(), D)
     p_cpp = gradient_descent_cpp(X.copy(), D, learning_rate=lr, num_iterations=niter)
 
     ### Benchmarks
     benchmark_gradient_descent_native(X_native.copy(), D_native, lr=lr, niter=niter)
     benchmark_gradient_descent(X.copy(), D, lr=lr, niter=niter)
     benchmark_gradient_descent_JAX(X.copy(), D, lr=lr, niter=niter)
-    benchmark_gradient_descent_JAX_2(X.copy(), D, lr=lr, niter=niter)
     benchmark_gradient_descent_JAX_3(X.copy(), D, lr=lr, niter=niter)
-    benchmark_gradient_descent_JAX_4(X.copy(), D, lr=lr, niter=niter)
-    benchmark_gradient_descent_Casadi(X.copy(), D)
     benchmark_gradient_descent_cpp(X.copy(), D, lr=lr, niter=niter)
 
     ## Visualization

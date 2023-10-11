@@ -1,7 +1,7 @@
 <h1 align='center'><b>Gradient Descent in Mojo 🔥</b></h1>
 <p align='center'><sub>
     Implementation of a simple gradient descent problem in Python, Numpy, JAX, C++ (binding with Python) and Mojo.
-    My goal here is to make a fair evaluation on the out-of-the-box, raw performance of a tech stack choice. Neither of the implementations is optimal. But what I hope to show is what execution speeds to expect out of the box, the complexity of each implementation and what choices have the possibility of squeezing out every bit of performance the hardware has to offer.
+    My goal here is to make a fair evaluation on the out-of-the-box, raw performance of a tech stack choice. Neither of the implementations is optimal. But what I hope to show is what execution speeds to expect out of the box, the complexity of each implementation and to pinpoint which ones have the possibility of squeezing out every bit of performance the hardware has to offer.
 	</sub>
 </p>
 

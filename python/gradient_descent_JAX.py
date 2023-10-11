@@ -51,36 +51,6 @@ def calc_single_grad(carry, row2):
     grad = 4 * (squared_distance - D[row1, row2]**2) * difference
     return (X, D, row1), grad
 
-# ----- Jax Method 3 -----
-@partial(jax.jit, static_argnums=(2,3))
-def gradient_descent_JAX3(X, D, learning_rate=0.0001, num_iterations=1000):
-    D = jnp.array(D)
-    X = jnp.array(X)
-    
-    iterations = jnp.arange(num_iterations)
-    (X, learning_rate, D), _ = jax.lax.scan(grad_step_jax3, (X, learning_rate, D), iterations)
-    return X
-
-def grad_step_jax3(carry, x):
-    X, learning_rate, D = carry
-    
-    grad = compute_gradient_JAX3(X, D)
-    X -= learning_rate * grad
-    return (X, learning_rate, D), None
-
-def compute_gradient_JAX3(X, D):
-    N = X.shape[0]
-    grad = []
-
-    for i in range(N):
-        grad_i = 0
-        for j in range(N):
-            difference = X[i] - X[j]
-            squared_distance = jnp.dot(difference.T, difference)
-            grad_i += 4 * (squared_distance - D[i, j]**2) * difference
-        grad.append(grad_i)
-    grad_arr = jnp.array(grad)
-    return grad_arr
 
 # ----- Jax cache method for plotting -----
 def gradient_descent_cache_JAX(X, D, learning_rate=0.001, num_iterations=1000):

@@ -79,23 +79,23 @@ fn main():
 
     # Generate optimization target
     let points: Matrix[dtype]
-    # alias n_circle = 100
-    # alias dim_circle = 3
-    # points = generate_radial_points[dtype](n_circle, dim_circle)
+    alias n_circle = 10
+    alias dim_circle = 2
+    points = generate_radial_points[dtype](n_circle, dim_circle)
     
-    try:
-        points = read_shape[dtype]("./shapes/flame.csv")
-        # points = read_shape[dtype]("./shapes/modular.csv")
-    except e:
-        print("Failed to parse shape: ", e)
+    # try:
+    #     points = read_shape[dtype]("./shapes/flame.csv")
+    #     # points = read_shape[dtype]("./shapes/modular.csv")
+    # except e:
+    #     print("Failed to parse shape: ", e)
 
 
     # Optimization input
     alias dim = 2
-    alias lr = 0.0002
+    alias lr = 0.001
     alias niter = 1000
     alias plots = True
-    alias run_python = False
+    alias run_python = True
 
     let D: Matrix[dtype]
     D = generate_distance_matrix[dtype](points)

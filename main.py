@@ -67,7 +67,7 @@ def benchmark_gradient_descent_JAX_3(X, D, lr, niter):
     print(f"Average time JAX3: {secs}")
 
 def benchmark_gradient_descent_JAX_4(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX3(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_JAX4(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time JAX4: {secs}")
     
 def benchmark_gradient_descent_cpp(X, D, lr, niter):

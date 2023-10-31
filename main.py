@@ -54,7 +54,7 @@ def benchmark_gradient_descent(X, D, lr, niter):
 def benchmark_gradient_descent_JAX(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time JAX: {secs}")
-    
+
 def benchmark_gradient_descent_cpp(X, D, lr, niter):
     secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
     print(f"Average time C++ binding: {secs}")

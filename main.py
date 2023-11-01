@@ -43,20 +43,21 @@ def generate_distance_matrix(points):
     return distance_matrix
 
 
+NUM_ITERS = 10
 def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
-    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=2) / 2
+    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time python native: {secs}")
 
 def benchmark_gradient_descent(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=2) / 2
+    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time python numpy: {secs}")
 
 def benchmark_gradient_descent_JAX(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time JAX: {secs}")
 
 def benchmark_gradient_descent_cpp(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time C++ binding: {secs}")
 
 

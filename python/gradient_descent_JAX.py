@@ -51,17 +51,13 @@ def gradient_descent_cache_JAX(X, D, learning_rate=0.001, num_iterations=1000):
     X = jnp.array(X)
     
     iterations = jnp.arange(num_iterations)
-    (X, learning_rate, D), (positions_over_time, loss_over_time) = jax.lax.scan(grad_step_with_time_evolution, (X, learning_rate, D), iterations)
-
-    #positions_over_time.append(X.copy())
-    #loss_over_time.append(loss(X, D))
+    _, (positions_over_time, loss_over_time) = jax.lax.scan(grad_step_with_time_evolution, (X, learning_rate, D), iterations)
 
     return positions_over_time, loss_over_time
 
-
-def grad_step_with_time_evolution(carry, x):
+def grad_step_with_time_evolution(carry, _):
     X, learning_rate, D = carry
     loss_val = loss(X, D)
     grad = compute_gradient(X, D)
     X -= learning_rate * grad
-    return (X, learning_rate, D), (X,loss_val)
+    return (X, learning_rate, D), (X, loss_val)

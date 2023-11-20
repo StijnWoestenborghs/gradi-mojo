@@ -93,9 +93,8 @@ def benchmarks(D, dim, lr, niter, plots=True):
         P_native, L_native = gradient_descent_native_cache(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
         plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
 
-        # TODO
-        # P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
-        # plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
+        P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
+        plot_gradient_descent(P_JAX.tolist(), L_JAX.tolist(), title="Gradient Descent in JAX")
         
         # (cache function not implemented: Can only plot final value)
         plot_gradient_descent(p_cpp, -1, title="Gradient Descent in C++")

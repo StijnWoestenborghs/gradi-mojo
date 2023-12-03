@@ -43,20 +43,21 @@ def generate_distance_matrix(points):
     return distance_matrix
 
 
+NUM_ITERS = 10
 def benchmark_gradient_descent_native(X_native, D_native, lr, niter):
-    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=2) / 2
+    secs = timeit(lambda: gradient_descent_native(X_native, D_native, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time python native: {secs}")
 
 def benchmark_gradient_descent(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=2) / 2
+    secs = timeit(lambda: gradient_descent(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time python numpy: {secs}")
 
 def benchmark_gradient_descent_JAX(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_JAX(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time JAX: {secs}")
-    
+
 def benchmark_gradient_descent_cpp(X, D, lr, niter):
-    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=10) / 10
+    secs = timeit(lambda: gradient_descent_cpp(X, D, learning_rate=lr, num_iterations=niter), number=NUM_ITERS) / NUM_ITERS
     print(f"Average time C++ binding: {secs}")
 
 
@@ -92,9 +93,8 @@ def benchmarks(D, dim, lr, niter, plots=True):
         P_native, L_native = gradient_descent_native_cache(X_native.copy(), D_native, learning_rate=lr, num_iterations=niter)
         plot_gradient_descent(P_native, L_native, title="Gradient Descent in native python")
 
-        # TODO
-        # P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
-        # plot_gradient_descent(P_JAX, L_JAX, title="Gradient Descent in JAX")
+        P_JAX, L_JAX = gradient_descent_cache_JAX(X.copy(), D, learning_rate=lr, num_iterations=niter)
+        plot_gradient_descent(P_JAX.tolist(), L_JAX.tolist(), title="Gradient Descent in JAX")
         
         # (cache function not implemented: Can only plot final value)
         plot_gradient_descent(p_cpp, -1, title="Gradient Descent in C++")
